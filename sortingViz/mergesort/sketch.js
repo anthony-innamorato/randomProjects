@@ -84,6 +84,5 @@ function draw() {
     }
   } else if (STATE === 2) {                               //show sorting
     mergesort(0, ARR.length-1);
-    console.log(ARR);
   }
 }
