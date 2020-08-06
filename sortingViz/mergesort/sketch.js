@@ -6,6 +6,7 @@ var STATE = 0;
 STATE defined as {
   0: show sorted,
   1: shuffling,
+  2: sorting
 }
 */
 var COUNTDOWN = 100; //keep track of frames to show
@@ -16,6 +17,41 @@ function myShuffle(index) {
   const temp = ARR[index]
   ARR[index] = ARR[j]
   ARR[j] = temp
+}
+
+function merge(left, mid, right) {
+  let secondHalfStart = mid+1;
+
+  if (ARR[mid] < ARR[secondHalfStart]) return;
+
+  while (left <= mid && secondHalfStart <= right) {
+    if (ARR[left] <= ARR[secondHalfStart]) left++;
+
+    else {
+      let currVal = ARR[secondHalfStart];
+      let currInd = secondHalfStart;
+
+      while (currInd != left) {
+        ARR[currInd] = ARR[currInd-1];
+        currInd--;
+      }
+
+      ARR[left] = currVal;
+
+      left++; mid++; secondHalfStart++;
+    }
+  }
+}
+
+function mergesort(left, right) {
+  if (left < right) {
+    //not gonna overflow unless screen resolutions get quite big :)
+    let mid = Math.floor( (left+right) / 2)
+
+    mergesort(left, mid);
+    mergesort(mid+1, right);
+    merge(left, mid, right);
+  }
 }
 
 function setup() {
@@ -34,20 +70,20 @@ function setup() {
 
 function draw() {
   background(0);
+  //display array
   for (let i = 0; i < ARR.length; i++) {
     line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR[i]);
   }
   COUNTDOWN--;
-  if (STATE === 0 && COUNTDOWN === 0) {
+  if (STATE === 0 && COUNTDOWN === 0) {                   //showing clean array
     STATE = 1; COUNTDOWN = 100;
-  } else if (STATE === 1) {
+  } else if (STATE === 1) {                               //showing shuffle
     myShuffle(IND_TO_SHUFFLE); IND_TO_SHUFFLE--;
-    if (IND_TO_SHUFFLE === 0) {
+    if (IND_TO_SHUFFLE === 0) {                           //shuffle complete
       STATE = 2;
     }
+  } else if (STATE === 2) {                               //show sorting
+    mergesort(0, ARR.length-1);
+    console.log(ARR);
   }
-  //enum show clean array
-  //enum show shuffling
-  //enum show sorting
-  //enum show sorted
 }
