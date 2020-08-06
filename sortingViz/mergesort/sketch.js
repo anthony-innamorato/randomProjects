@@ -18,6 +18,7 @@ function draw() {
   for (let i = 0; i < ARR.length; i++) {
     line(i*STROKEWEIGHT, HEIGHT, i*STROKEWEIGHT, HEIGHT-ARR[i]);
   }
+  ARR = shuffle(ARR);
   //enum show clean array
   //enum show shuffling
   //enum show sorting
