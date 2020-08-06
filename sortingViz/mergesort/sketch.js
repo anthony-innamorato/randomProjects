@@ -1,5 +1,6 @@
 var ARR = [];
-var WIDTH = 1200; var HEIGHT = 700;
+var WIDTH = 1400; var HEIGHT = 700;
+var STROKEWEIGHT;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -8,12 +9,14 @@ function setup() {
     ARR[i] = i+1;
   }
   stroke(0, 255, 0);
+  STROKEWEIGHT = WIDTH/HEIGHT;
+  strokeWeight(STROKEWEIGHT);
 }
 
 function draw() {
   background(0);
   for (let i = 0; i < ARR.length; i++) {
-    line(i, HEIGHT, i, HEIGHT-ARR[i]);
+    line(i*STROKEWEIGHT, HEIGHT, i*STROKEWEIGHT, HEIGHT-ARR[i]);
   }
   //enum show clean array
   //enum show shuffling
