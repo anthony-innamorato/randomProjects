@@ -1,4 +1,4 @@
-//TODO: clean up, add color gradients, window size, verify sort graphic
+//TODO: clean up, add color gradients, verify sort graphic
 
 
 var ARR = [];
@@ -80,7 +80,7 @@ function setup() {
   }
   IND_TO_SHUFFLE = ARR.length-1;
 
-  stroke(0, 255, 0);
+  colorMode(HSB);
   STROKE_WEIGHT = WIDTH/HEIGHT;
   strokeWeight(STROKE_WEIGHT);
 }
@@ -91,13 +91,16 @@ function draw() {
   if (STATE === 3 && STATES_IND < ARR_STATES.length) {
     //display array
     for (let i = 0; i < ARR_STATES[STATES_IND].length; i++) {
-      line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR_STATES[STATES_IND][i]);
+      let currVal = ARR_STATES[STATES_IND][i]
+      stroke(map(currVal, 1, min(WIDTH, HEIGHT), 0, 360), 100, 100);
+      line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-currVal);
     }
     STATES_IND++;
     return;
   }
   //display array
   for (let i = 0; i < ARR.length; i++) {
+    stroke(map(ARR[i], 1, min(WIDTH, HEIGHT), 0, 360), 100, 100);
     line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR[i]);
   }
   COUNTDOWN--;
