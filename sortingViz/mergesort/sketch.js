@@ -6,17 +6,28 @@ var STATE = 0;
 STATE defined as {
   0: show sorted,
   1: shuffling,
-  2: sorting
+  2: sorting, store states
+  3: done sorting, show states
 }
 */
 var COUNTDOWN = 100; //keep track of frames to show
 var IND_TO_SHUFFLE;
+var ARR_STATES = [];  //keep all steps to array bc can only draw state once
+var STATES_IND = 0;
 
-function myShuffle(index) {
+function fisherYates(index) {
   const j = Math.floor(Math.random() * index)
   const temp = ARR[index]
   ARR[index] = ARR[j]
   ARR[j] = temp
+}
+
+function deepcopy(arr) {
+  let newArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    newArr[i] = arr[i];
+  }
+  return newArr;
 }
 
 function merge(left, mid, right) {
@@ -25,6 +36,7 @@ function merge(left, mid, right) {
   if (ARR[mid] < ARR[secondHalfStart]) return;
 
   while (left <= mid && secondHalfStart <= right) {
+
     if (ARR[left] <= ARR[secondHalfStart]) left++;
 
     else {
@@ -32,10 +44,12 @@ function merge(left, mid, right) {
       let currInd = secondHalfStart;
 
       while (currInd != left) {
+        append(ARR_STATES, deepcopy(ARR))
         ARR[currInd] = ARR[currInd-1];
         currInd--;
       }
 
+      append(ARR_STATES, deepcopy(ARR))
       ARR[left] = currVal;
 
       left++; mid++; secondHalfStart++;
@@ -70,6 +84,15 @@ function setup() {
 
 function draw() {
   background(0);
+
+  if (STATE === 3 && STATES_IND < ARR_STATES.length) {
+    //display array
+    for (let i = 0; i < ARR_STATES[STATES_IND].length; i++) {
+      line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR_STATES[STATES_IND][i]);
+    }
+    STATES_IND++;
+    return;
+  }
   //display array
   for (let i = 0; i < ARR.length; i++) {
     line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR[i]);
@@ -78,11 +101,12 @@ function draw() {
   if (STATE === 0 && COUNTDOWN === 0) {                   //showing clean array
     STATE = 1; COUNTDOWN = 100;
   } else if (STATE === 1) {                               //showing shuffle
-    myShuffle(IND_TO_SHUFFLE); IND_TO_SHUFFLE--;
+    fisherYates(IND_TO_SHUFFLE); IND_TO_SHUFFLE--;
     if (IND_TO_SHUFFLE === 0) {                           //shuffle complete
       STATE = 2;
     }
   } else if (STATE === 2) {                               //show sorting
     mergesort(0, ARR.length-1);
+    STATE = 3;
   }
 }
