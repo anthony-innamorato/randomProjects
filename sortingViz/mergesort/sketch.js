@@ -1,8 +1,8 @@
-//TODO: clean up, add color gradients
+//TODO: clean up, add color gradients, window size, verify sort graphic
 
 
 var ARR = [];
-var WIDTH = 2450; var HEIGHT = 1250;
+var WIDTH = window.innerWidth; var HEIGHT = window.innerHeight;
 var STROKE_WEIGHT;
 var STATE = 0;
 /*
