@@ -1,5 +1,5 @@
 var ARR = [];
-var WIDTH = 1400; var HEIGHT = 700;
+var WIDTH = 2450; var HEIGHT = 1250;
 var STROKE_WEIGHT;
 var STATE = 0;
 /*
@@ -36,7 +36,7 @@ function merge(left, mid, right) {
   if (ARR[mid] < ARR[secondHalfStart]) return;
 
   while (left <= mid && secondHalfStart <= right) {
-
+    append(ARR_STATES, deepcopy(ARR))
     if (ARR[left] <= ARR[secondHalfStart]) left++;
 
     else {
@@ -44,12 +44,12 @@ function merge(left, mid, right) {
       let currInd = secondHalfStart;
 
       while (currInd != left) {
-        append(ARR_STATES, deepcopy(ARR))
+        //append(ARR_STATES, deepcopy(ARR))
         ARR[currInd] = ARR[currInd-1];
         currInd--;
       }
 
-      append(ARR_STATES, deepcopy(ARR))
+      //append(ARR_STATES, deepcopy(ARR))
       ARR[left] = currVal;
 
       left++; mid++; secondHalfStart++;
