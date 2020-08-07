@@ -1,6 +1,3 @@
-//TODO: clean up
-
-
 var ARR = [];
 var WIN_BUFF_SIZE = .8;      //ratio for canvas buffers
 
@@ -27,8 +24,9 @@ STATE defined as {
 var COUNTDOWN = 100; //keep track of frames to show
 var IND_TO_SHUFFLE; var IND_TO_VERIFY;
 var ARR_STATES = [];  //keep all steps to array bc can only draw state once
-var STATES_IND = 0;
+var STATES_IND = 0;   //ind of the current state to output
 
+//classic shuffling algorithm
 function fisherYates(index) {
   const j = Math.floor(Math.random() * index)
   const temp = ARR[index]
@@ -44,7 +42,7 @@ function deepcopy(arr) {
   return newArr;
 }
 
-function merge(left, mid, right) {
+function mergeHalves(left, mid, right) {
   let secondHalfStart = mid+1;
 
   if (ARR[mid] < ARR[secondHalfStart]) return;
@@ -76,7 +74,7 @@ function mergesort(left, right) {
 
     mergesort(left, mid);
     mergesort(mid+1, right);
-    merge(left, mid, right);
+    mergeHalves(left, mid, right);
   }
 }
 
@@ -96,6 +94,7 @@ function setup() {
 function draw() {
   background(0);
 
+  //if on displaying steps, return to not display ARR
   if (STATE === 3 && STATES_IND < ARR_STATES.length) {
     //display array
     for (let i = 0; i < ARR_STATES[STATES_IND].length; i++) {
@@ -124,7 +123,7 @@ function draw() {
     mergesort(0, ARR.length-1);
     STATE = 3; IND_TO_VERIFY = 0;
   } else if (STATE === 4 && IND_TO_VERIFY < ARR.length-1) {
-    //reuse IND_TO_SHUFFLE as tracker for curr ind to verify sorted
+    //check for failing of algorithm (can test by manually setting after sort)
     if (ARR[IND_TO_VERIFY] > ARR[IND_TO_VERIFY+1]) {
       textSize(50);
       textAlign(LEFT, TOP);
@@ -133,6 +132,7 @@ function draw() {
       text("FAILED", 0, 0);
       noLoop();
     }
+
     let xPos = (IND_TO_VERIFY*STROKE_WEIGHT)+X_OFFSET;
     line(xPos, HEIGHT+Y_OFFSET, xPos, HEIGHT-ARR[IND_TO_VERIFY]+Y_OFFSET);
     IND_TO_VERIFY++;
