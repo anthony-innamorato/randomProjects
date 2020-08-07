@@ -1,13 +1,18 @@
-//TODO: clean up, verify sort graphic, fix offset
+//TODO: clean up
 
 
 var ARR = [];
-var WIN_BUFF_SIZE = .95;
+var WIN_BUFF_SIZE = .8;      //ratio for canvas buffers
+
+//effective array bounds
 var WIDTH = window.innerWidth * WIN_BUFF_SIZE;
 var HEIGHT = window.innerHeight * WIN_BUFF_SIZE;
+//offsets to even buffer borders
 var X_OFFSET = ((1.0-WIN_BUFF_SIZE)/2)* window.innerWidth;
 var Y_OFFSET = ((1.0-WIN_BUFF_SIZE)/2)* window.innerHeight;
-var STROKE_WEIGHT;
+
+var STROKE_WEIGHT = WIDTH/HEIGHT; //make sure aspect ratio is maintained
+
 var STATE = 0;
 /*
 STATE defined as {
@@ -18,8 +23,9 @@ STATE defined as {
   4: show verifying sort
 }
 */
-var COUNTDOWN = 1000; //keep track of frames to show
-var IND_TO_SHUFFLE;
+
+var COUNTDOWN = 100; //keep track of frames to show
+var IND_TO_SHUFFLE; var IND_TO_VERIFY;
 var ARR_STATES = [];  //keep all steps to array bc can only draw state once
 var STATES_IND = 0;
 
@@ -84,7 +90,6 @@ function setup() {
   IND_TO_SHUFFLE = ARR.length-1;
 
   colorMode(HSB);
-  STROKE_WEIGHT = WIDTH/HEIGHT;
   strokeWeight(STROKE_WEIGHT);
 }
 
@@ -114,14 +119,29 @@ function draw() {
     STATE = 1; COUNTDOWN = 100;
   } else if (STATE === 1) {                               //showing shuffle
     fisherYates(IND_TO_SHUFFLE); IND_TO_SHUFFLE--;
-    if (IND_TO_SHUFFLE === 0) {                           //shuffle complete
-      STATE = 2;
-    }
+    if (IND_TO_SHUFFLE === 0) STATE = 2;                  //shuffle complete
   } else if (STATE === 2) {                               //show sorting
     mergesort(0, ARR.length-1);
-    STATE = 3;
-  } else if (STATE === 4 && IND_TO_SHUFFLE < ARR.length) {
-    //use IND_TO_SHUFFLE as tracker for curr ind to verify sorted
-    IND_TO_SHUFFLE++;
+    STATE = 3; IND_TO_VERIFY = 0;
+  } else if (STATE === 4 && IND_TO_VERIFY < ARR.length-1) {
+    //reuse IND_TO_SHUFFLE as tracker for curr ind to verify sorted
+    if (ARR[IND_TO_VERIFY] > ARR[IND_TO_VERIFY+1]) {
+      textSize(50);
+      textAlign(LEFT, TOP);
+      strokeWeight(2);
+      fill(255, 0, 0);
+      text("FAILED", 0, 0);
+      noLoop();
+    }
+    let xPos = (IND_TO_VERIFY*STROKE_WEIGHT)+X_OFFSET;
+    line(xPos, HEIGHT+Y_OFFSET, xPos, HEIGHT-ARR[IND_TO_VERIFY]+Y_OFFSET);
+    IND_TO_VERIFY++;
+  } else if (IND_TO_VERIFY === ARR.length-1) {
+    textSize(50);
+    textAlign(LEFT, TOP);
+    strokeWeight(2);
+    fill(255, 0, 0);
+    text("SUCCESS", 0, 0);
+    noLoop();
   }
 }
