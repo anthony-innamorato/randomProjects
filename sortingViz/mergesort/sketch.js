@@ -1,4 +1,4 @@
-//TODO: clean up, add color gradients, window size
+//TODO: clean up, add color gradients, window size, verify sort graphic
 
 
 var ARR = [];
