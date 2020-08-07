@@ -1,3 +1,6 @@
+//TODO: clean up, add color gradients
+
+
 var ARR = [];
 var WIDTH = 2450; var HEIGHT = 1250;
 var STROKE_WEIGHT;
