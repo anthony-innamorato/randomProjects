@@ -1,8 +1,12 @@
-//TODO: clean up, add color gradients, verify sort graphic
+//TODO: clean up, verify sort graphic, fix offset
 
 
 var ARR = [];
-var WIDTH = window.innerWidth; var HEIGHT = window.innerHeight;
+var WIN_BUFF_SIZE = .95;
+var WIDTH = window.innerWidth * WIN_BUFF_SIZE;
+var HEIGHT = window.innerHeight * WIN_BUFF_SIZE;
+var X_OFFSET = ((1.0-WIN_BUFF_SIZE)/2)* window.innerWidth;
+var Y_OFFSET = ((1.0-WIN_BUFF_SIZE)/2)* window.innerHeight;
 var STROKE_WEIGHT;
 var STATE = 0;
 /*
@@ -10,10 +14,11 @@ STATE defined as {
   0: show sorted,
   1: shuffling,
   2: sorting, store states
-  3: done sorting, show states
+  3: done sorting, show states,
+  4: show verifying sort
 }
 */
-var COUNTDOWN = 100; //keep track of frames to show
+var COUNTDOWN = 1000; //keep track of frames to show
 var IND_TO_SHUFFLE;
 var ARR_STATES = [];  //keep all steps to array bc can only draw state once
 var STATES_IND = 0;
@@ -47,12 +52,10 @@ function merge(left, mid, right) {
       let currInd = secondHalfStart;
 
       while (currInd != left) {
-        //append(ARR_STATES, deepcopy(ARR))
         ARR[currInd] = ARR[currInd-1];
         currInd--;
       }
 
-      //append(ARR_STATES, deepcopy(ARR))
       ARR[left] = currVal;
 
       left++; mid++; secondHalfStart++;
@@ -72,7 +75,7 @@ function mergesort(left, right) {
 }
 
 function setup() {
-  createCanvas(WIDTH, HEIGHT);
+  createCanvas(WIDTH/WIN_BUFF_SIZE, HEIGHT/WIN_BUFF_SIZE);  //undo window buffer
 
   //make array based on dimensions
   for (let i = 0; i < min(WIDTH, HEIGHT); i++) {
@@ -93,15 +96,18 @@ function draw() {
     for (let i = 0; i < ARR_STATES[STATES_IND].length; i++) {
       let currVal = ARR_STATES[STATES_IND][i]
       stroke(map(currVal, 1, min(WIDTH, HEIGHT), 0, 360), 100, 100);
-      line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-currVal);
+      let xPos = (i*STROKE_WEIGHT)+X_OFFSET;
+      line(xPos, HEIGHT+Y_OFFSET, xPos, HEIGHT-currVal+Y_OFFSET);
     }
     STATES_IND++;
+    if (STATES_IND === ARR_STATES.length) STATE = 4;
     return;
   }
   //display array
   for (let i = 0; i < ARR.length; i++) {
     stroke(map(ARR[i], 1, min(WIDTH, HEIGHT), 0, 360), 100, 100);
-    line(i*STROKE_WEIGHT, HEIGHT, i*STROKE_WEIGHT, HEIGHT-ARR[i]);
+    let xPos = (i*STROKE_WEIGHT)+X_OFFSET;
+    line(xPos, HEIGHT+Y_OFFSET, xPos, HEIGHT-ARR[i]+Y_OFFSET);
   }
   COUNTDOWN--;
   if (STATE === 0 && COUNTDOWN === 0) {                   //showing clean array
@@ -114,5 +120,8 @@ function draw() {
   } else if (STATE === 2) {                               //show sorting
     mergesort(0, ARR.length-1);
     STATE = 3;
+  } else if (STATE === 4 && IND_TO_SHUFFLE < ARR.length) {
+    //use IND_TO_SHUFFLE as tracker for curr ind to verify sorted
+    IND_TO_SHUFFLE++;
   }
 }
