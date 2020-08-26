@@ -28,10 +28,10 @@ var STATES_IND = 0;   //ind of the current state to output
 
 //classic shuffling algorithm
 function fisherYates(index) {
-  const j = Math.floor(Math.random() * index)
-  const temp = ARR[index]
-  ARR[index] = ARR[j]
-  ARR[j] = temp
+  const j = Math.floor(Math.random() * index);
+  const temp = ARR[index];
+  ARR[index] = ARR[j];
+  ARR[j] = temp;
 }
 
 function deepcopy(arr) {
@@ -48,7 +48,7 @@ function mergeHalves(left, mid, right) {
   if (ARR[mid] < ARR[secondHalfStart]) return;
 
   while (left <= mid && secondHalfStart <= right) {
-    append(ARR_STATES, deepcopy(ARR))
+    append(ARR_STATES, deepcopy(ARR));
     if (ARR[left] <= ARR[secondHalfStart]) left++;
 
     else {
@@ -70,7 +70,7 @@ function mergeHalves(left, mid, right) {
 function mergesort(left, right) {
   if (left < right) {
     //not gonna overflow unless screen resolutions get quite big :)
-    let mid = Math.floor( (left+right) / 2)
+    let mid = Math.floor( (left+right) / 2);
 
     mergesort(left, mid);
     mergesort(mid+1, right);
@@ -98,7 +98,7 @@ function draw() {
   if (STATE === 3 && STATES_IND < ARR_STATES.length) {
     //display array
     for (let i = 0; i < ARR_STATES[STATES_IND].length; i++) {
-      let currVal = ARR_STATES[STATES_IND][i]
+      let currVal = ARR_STATES[STATES_IND][i];
       stroke(map(currVal, 1, min(WIDTH, HEIGHT), 0, 360), 100, 100);
       let xPos = (i*STROKE_WEIGHT)+X_OFFSET;
       line(xPos, HEIGHT+Y_OFFSET, xPos, HEIGHT-currVal+Y_OFFSET);
