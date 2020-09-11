@@ -51,6 +51,36 @@ source = np.array([
 sourceCols = ["name", "city", "age", "py-score"]
 sourceRows = [elem for elem in range(100, 100+len(source))]
 df = pd.DataFrame(source, columns=sourceCols, index=sourceRows)
+
 print(df)
 print(df["name"])
 print(df.loc[100])
+print(df.loc[100:102, ["name", "city"]])
+print(df.iloc[0:2, 0:1]) #note that iloc is exclusive stop
+print(df.iat[0, 0])
+print(df.at[100, "name"])
+
+#setting data w/ accessors
+df.iloc[:3, 1] = ["Mex City", "Tor", "Pra"]
+print(df)
+df.iloc[3:, 1] = ["Shang", "Manchest", "Cai", "Osa"]
+print(df)
+
+#inserting into df
+me = pd.Series(data=["Tony", "NYC", 22, 100], index=df.columns,
+    name=100+len(source))
+print(me)
+newDf = df.append(me) #keep in mind df wont be modified, op will return new obj
+print(newDf)
+newDf.drop(labels=100+len(source), inplace=True) #inplace only exists for drop
+print(newDf)
+
+#inserting/deleting columns same as dict ops
+df["zeroed"] = 0
+print(df)
+del df["zeroed"]
+print(df)
+df.insert(loc=3, column="zeroed", value=0) #use .insert for specific loc insert
+print(df)
+print(df.pop("zeroed"))
+print(df)
