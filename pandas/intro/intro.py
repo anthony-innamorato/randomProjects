@@ -126,3 +126,9 @@ filter = ~(df["java-score"] >= 80) & ~(df["py-score"] >= 80); print(filter)
 print(df[filter])
 
 print(df["java-score"].where(cond=df["java-score"] >= 70, other=70.0))
+
+#determining stats
+print(df.describe(), '\n')    #this is super cool
+print(df.mean(), '\n')
+print(df.describe().loc["mean"])    #thought this might work and wanted to check
+print(df.describe()["age"])         #more logic checks
