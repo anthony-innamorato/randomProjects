@@ -128,7 +128,20 @@ print(df[filter])
 print(df["java-score"].where(cond=df["java-score"] >= 70, other=70.0))
 
 #determining stats
+print("====================================")
 print(df.describe(), '\n')    #this is super cool
 print(df.mean(), '\n')
 print(df.describe().loc["mean"])    #thought this might work and wanted to check
 print(df.describe()["age"])         #more logic checks
+
+
+#missing data
+print("====================================")
+missingDF = pd.DataFrame({"x": [1, 2, np.nan, 4]})
+print(missingDF, '\n')
+print(missingDF.mean())
+correctDF = pd.DataFrame({"x": [1, 2, np.nan, 4]}).fillna(value=10)
+print(correctDF, '\n')
+print(correctDF.mean())
+#keep in mind .fillna(method="ffil"), .fillna(method="bfill"), .interpolate()
+#.dropna() also an option to drop invalid data
