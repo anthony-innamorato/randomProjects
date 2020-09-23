@@ -33,7 +33,7 @@ print(df)
 
 #cast df as numpy arr
 print("====================================")
-print(df.to_numpy(copy=True))    #use this for access to optional dtype & copy params
+print(df.to_numpy(copy=True)) #use this for access to optional dtype/copy params
 print(df.values)
 
 #mess w data types of objects in data frame
@@ -101,4 +101,28 @@ print(df["py-score"]/100)
 #applying numpy averages
 print("====================================")
 df["randScore"] = 50
+print(df)
+#one new thing to me is no trailing zeroes printed
 print(np.average(df.loc[:, ["py-score", "randScore"]], axis=1))
+
+print("====================================")
+df = pd.read_csv("data.csv", index_col=0)
+print(df, "\n")
+df.sort_values(by="java-score", ascending=False, inplace=True) #remember inplace
+print(df)
+
+#filtering data (this is p cool)
+print("====================================")
+filter = df["java-score"] >= 80; print(filter)
+print(df[filter])
+#keep in mind NOT(~), AND(&), OR(|), XOR(^) can be concatenated to return Series
+filter = (df["java-score"] >= 80) & (df["py-score"] >= 81); print(filter)
+print(df[filter])
+filter = (df["java-score"] >= 80) | (df["py-score"] >= 80); print(filter)
+print(df[filter])
+filter = (df["java-score"] >= 80) ^ (df["py-score"] >= 80); print(filter)
+print(df[filter])
+filter = ~(df["java-score"] >= 80) & ~(df["py-score"] >= 80); print(filter)
+print(df[filter])
+
+print(df["java-score"].where(cond=df["java-score"] >= 70, other=70.0))
