@@ -1,1 +1,1 @@
-# Repo for the random projects I feel like doing
+# Repo for some random college projects
